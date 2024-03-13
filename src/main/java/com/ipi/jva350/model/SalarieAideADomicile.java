@@ -72,8 +72,19 @@ public class SalarieAideADomicile {
      * @return
      */
     public boolean aLegalementDroitADesCongesPayes() {
-        return this.getJoursTravaillesAnneeNMoins1() > 10;
+
+        return this.getJoursTravaillesAnneeNMoins1() >= 10;
     }
+
+    public boolean ajouteConge(LocalDate debutConge, LocalDate finConge) {
+        // Implémentez ici la logique pour ajouter le congé
+        // Par exemple, vous pouvez ajouter les dates de congé à une collection
+        // ou interagir avec une base de données
+        return true; // Retournez vrai si l'ajout du congé réussit, sinon faux
+    }
+
+
+
 
     /**
      * @param dateDebut
@@ -108,6 +119,8 @@ public class SalarieAideADomicile {
         }
         return joursDeCongeDecomptes;
     }
+
+
     public boolean estJourOuvrable(LocalDate jour) {
         return jour.getDayOfWeek().getValue() != DayOfWeek.SUNDAY.getValue()
                 && !Entreprise.estJourFerie(jour);

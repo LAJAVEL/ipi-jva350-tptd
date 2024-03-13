@@ -200,4 +200,37 @@ public class SalarieAideADomicileService {
         salarieAideADomicileRepository.save(salarieAideADomicile);
     }
 
+    public void cloturerMois(SalarieAideADomicile salarieAideADomicile, double joursTravailles) throws SalarieException {
+        // Incrémente les jours travaillés de l'année N du salarié de celles passées en paramètres
+        salarieAideADomicile.setJoursTravaillesAnneeN(salarieAideADomicile.getJoursTravaillesAnneeN() + joursTravailles);
+
+        salarieAideADomicile.setCongesPayesAcquisAnneeN(salarieAideADomicile.getCongesPayesAcquisAnneeN()
+                + SalarieAideADomicile.CONGES_PAYES_ACQUIS_PAR_MOIS);
+
+        salarieAideADomicile.setMoisEnCours(salarieAideADomicile.getMoisEnCours().plusMonths(1));
+
+        if (salarieAideADomicile.getMoisEnCours().getMonth().getValue() == 6) {
+            cloturerAnnee(salarieAideADomicile);
+        }
+
+        salarieAideADomicileRepository.save(salarieAideADomicile);
+    }
+
+    public void cloturerAnnee(SalarieAideADomicile salarieAideADomicile) {
+        salarieAideADomicile.setJoursTravaillesAnneeNMoins1(salarieAideADomicile.getJoursTravaillesAnneeN());
+        salarieAideADomicile.setCongesPayesAcquisAnneeNMoins1(salarieAideADomicile.getCongesPayesAcquisAnneeN());
+        salarieAideADomicile.setCongesPayesPrisAnneeNMoins1(0);
+        salarieAideADomicile.setJoursTravaillesAnneeN(0);
+        salarieAideADomicile.setCongesPayesAcquisAnneeN(0);
+
+        // On ne garde que les jours de congés pris sur la nouvelle année (voir ajouteConges()) :
+        salarieAideADomicile.setCongesPayesPris(new LinkedHashSet<>(salarieAideADomicile.getCongesPayesPris().stream()
+                .filter(d -> d.isAfter(LocalDate.of(Entreprise.getPremierJourAnneeDeConges(
+                        salarieAideADomicile.getMoisEnCours()).getYear(), 5, 31)))
+                .collect(Collectors.toList())));
+
+        salarieAideADomicileRepository.save(salarieAideADomicile);
+    }
+
+
 }
