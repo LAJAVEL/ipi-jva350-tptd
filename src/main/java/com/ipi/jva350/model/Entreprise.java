@@ -130,25 +130,33 @@ public final class Entreprise {
     }
 
     public static boolean estJourFerie(LocalDate jour) {
-        int monEntier = (int) Entreprise.joursFeries(jour).stream().filter(d ->
-                d.equals(jour)).count();
-        int test = bissextile(jour.getYear()) ? 1 : 0;
-        if (test != 0 && !(monEntier > 1)) {
-            test--;
+        List<LocalDate> joursFeries = Entreprise.joursFeries(jour);
+        boolean estBissextile = bissextile(jour.getYear());
+        int compteurJourFerie = 0;
+
+        for (LocalDate date : joursFeries) {
+            if (date.equals(jour)) {
+                compteurJourFerie++;
+            }
         }
-        return monEntier != test;
+
+        if (estBissextile && compteurJourFerie > 1) {
+            compteurJourFerie--;
+        }
+
+        return compteurJourFerie > 0;
     }
+
 
     /**
-     * Calcule si une date donnée est dans une plage (intervalle) de date (inclusif)
-     * @param d
-     * @param debut date de début de la plage
-     * @param fin date de fin de la plage
-     * @return
+     * Calcule si une date donnée est dans une plage (intervalle) de dates (inclusif).
+     *
+     * @param date      la date à vérifier
+     * @param debutPlage    la date de début de la plage
+     * @param finPlage      la date de fin de la plage
+     * @return true si la date est dans la plage, sinon false
      */
-    public static boolean estDansPlage(LocalDate d, LocalDate debut, LocalDate fin) {
-        // à implémenter en TDD !
-        throw new RuntimeException("à implémenter en TDD !");
+    public static boolean estDansPlage(LocalDate date, LocalDate debutPlage, LocalDate finPlage) {
+        return !date.isBefore(debutPlage) && !date.isAfter(finPlage);
     }
-
 }
