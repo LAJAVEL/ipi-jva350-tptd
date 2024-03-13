@@ -30,7 +30,7 @@ public class EntrepriseTest {
             // verifier si un jour férié est considéré dans la plage
             assertFalse(Entreprise.estDansPlage(LocalDate.of(2024, 3, 8), debutPlage, finPlage)); // 8 mars 2024 est un jour férié
         } catch (Exception e) {
-            System.err.println("je n'ai pas trouvé la source de cette erreur : " + e.getMessage());
+            System.err.println("ah tiens serais ce un errorlog : " + e.getMessage());
             e.printStackTrace();
             fail("Une erreur s'est produite : " + e.getMessage());
         }
